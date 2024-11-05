@@ -44,6 +44,7 @@ public class VeHinh extends JFrame{
         setLayout(null);
         setSize(500, 500);
         setTitle("Vẽ hình");
+        setLocationRelativeTo(null);
         choosePanel = new JPanel();
         choosePanel.setBounds(0, 0, 500, 150);
 //        choosePanel.setBackground(Color.red);
@@ -61,12 +62,16 @@ public class VeHinh extends JFrame{
         
         drawPanel = new DrawPanel();
         drawPanel.setBounds(0, 150, 500, 350);
+        typeString = (String)typeBox.getSelectedItem();
+        colorString = (String)colorBox.getSelectedItem();
+        polygonString = (String)polygonBox.getSelectedItem();
         add(drawPanel);
 //        drawPanel = new JPanel();
 //        drawPanel.setBounds(0, 150, 500, 300);
 //        drawPanel.setBackground(Color.GREEN);
         add(choosePanel);
-//        add(drawPanel);
+//        add(drawPanel);   
+        squareChosen();
         addEvent();
     }
     private void addEvent(){ 
@@ -156,24 +161,24 @@ public class VeHinh extends JFrame{
         choosePanel.add(heightTxtField);
     }   
     private void polygonChosen() {
-        JLabel widthLabel = new JLabel("Chiều dài: ");
-        JLabel heightLabel = new JLabel("Chiều rộng: ");
-        widthTxtField = new JTextField();
-        heightTxtField = new JTextField();
-        widthLabel.setBounds(50, 50, 70, 25);
-        heightLabel.setBounds(250, 50, 70, 25);
-        widthTxtField.setBounds(150, 50, 70, 25);
-        heightTxtField.setBounds(350, 50, 70, 25);
+//        JLabel widthLabel = new JLabel("Chiều dài: ");
+//        JLabel heightLabel = new JLabel("Chiều rộng: ");
+//        widthTxtField = new JTextField();
+//        heightTxtField = new JTextField();
+//        widthLabel.setBounds(50, 50, 70, 25);
+//        heightLabel.setBounds(250, 50, 70, 25);
+//        widthTxtField.setBounds(150, 50, 70, 25);
+//        heightTxtField.setBounds(350, 50, 70, 25);
         JLabel edgeLabel = new JLabel("Bán kính: ");
         edgeTxtField = new JTextField();
         edgeLabel.setBounds(100, 80, 70, 25);
         edgeTxtField.setBounds(200, 80, 250, 25);
         choosePanel.add(edgeLabel);
         choosePanel.add(edgeTxtField);
-        choosePanel.add(widthLabel);
-        choosePanel.add(widthTxtField);
-        choosePanel.add(heightLabel);
-        choosePanel.add(heightTxtField);
+//        choosePanel.add(widthLabel);
+//        choosePanel.add(widthTxtField);
+//        choosePanel.add(heightLabel);
+//        choosePanel.add(heightTxtField);
     }  
     private void drawShape() {
         try {
@@ -183,21 +188,38 @@ public class VeHinh extends JFrame{
             int panelHeight = drawPanel.getHeight();
             switch (polygonString) {
                 case "Hình vuông" -> {
-                    int size = Integer.parseInt(edgeTxtField.getText());
-                    currentShape = new Square(size, panelWidth, panelHeight);
+                    String s = edgeTxtField.getText().trim();
+                    if (isValidData(s)) {
+                        int size = Integer.parseInt(edgeTxtField.getText());
+                        currentShape = new Square(size, panelWidth, panelHeight);
+                    }
+                    
                 }
                 case "Hình chữ nhật" -> {
-                    int width = Integer.parseInt(widthTxtField.getText());
-                    int height = Integer.parseInt(heightTxtField.getText());
-                    currentShape = new Rectangle(width, height, panelWidth, panelHeight);
+                    String a = widthTxtField.getText();
+                    String b = heightTxtField.getText();
+                    if (isValidData(a, b)) {
+                        int width = Integer.parseInt(a);
+                        int height = Integer.parseInt(b);
+                        currentShape = new Rectangle(width, height, panelWidth, panelHeight);
+                    }
+                    
                 }
                 case "Hình tròn" -> {
-                    int radius = Integer.parseInt(edgeTxtField.getText());
-                    currentShape = new Circle(radius, panelWidth, panelHeight);
+                    String a = edgeTxtField.getText();
+                    if (isValidData(a)) {
+                        int radius = Integer.parseInt(a);
+                        currentShape = new Circle(radius, panelWidth, panelHeight);
+                    }
+                    
                 }
                 case "Đa giác" -> {
-                    int sides = Integer.parseInt(edgeTxtField.getText());
-                    currentShape = new Polygon(sides, Math.min(panelWidth, panelHeight) / 2 - 10, panelWidth, panelHeight);
+                    String a = edgeTxtField.getText();
+                    if (isValidData(a)) {
+                        int sides = Integer.parseInt(a);
+                        currentShape = new Polygon(sides, panelWidth, panelHeight);
+                    }
+                    
                 }
             }
         } catch (NumberFormatException ex) {
@@ -226,5 +248,15 @@ public class VeHinh extends JFrame{
                 currentShape.draw(g, isFilled, color);
             }
         }
+    }
+    private boolean isValidData(String ...a) {
+        for (String y : a) {
+            String x = y.trim();
+            if (x.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!");
+                return false;
+            }
+        }
+        return true;
     }
 }

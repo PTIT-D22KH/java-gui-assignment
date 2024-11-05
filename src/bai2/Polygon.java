@@ -22,20 +22,40 @@ public class Polygon implements Shape{
         this.xCenter = panelWidth / 2;
         this.yCenter = panelHeight / 2;
     }
+    
+    public Polygon(int radius, int panelWidth, int panelHeight) {
+        this.radius = radius;
+        this.xCenter = panelWidth / 2;
+        this.yCenter = panelHeight / 2;
+    }
 
     @Override
     public void draw(Graphics g, boolean isFilled, Color color) {
-        int[] xPoints = new int[sides];
-        int[] yPoints = new int[sides];
-        for (int i = 0; i < sides; i++) {
-            xPoints[i] = xCenter + (int) (radius * Math.cos(2 * Math.PI * i / sides));
-            yPoints[i] = yCenter + (int) (radius * Math.sin(2 * Math.PI * i / sides));
-        }
         g.setColor(color);
+        // Create a Polygon object
+        java.awt.Polygon polygon = new java.awt.Polygon();
+
+        // Add points to the polygon
+        polygon.addPoint(xCenter + radius, yCenter);
+        polygon.addPoint((int)(xCenter + radius *
+          Math.cos(2 * Math.PI / 6)), (int)(yCenter - radius *
+          Math.sin(2 * Math.PI / 6)));
+        polygon.addPoint((int)(xCenter + radius *
+          Math.cos(2 * 2 * Math.PI / 6)), (int)(yCenter - radius *
+          Math.sin(2 * 2 * Math.PI / 6)));
+        polygon.addPoint((int)(xCenter + radius *
+          Math.cos(3 * 2 * Math.PI / 6)), (int)(yCenter - radius *
+          Math.sin(3 * 2 * Math.PI / 6)));
+        polygon.addPoint((int)(xCenter + radius *
+          Math.cos(4 * 2 * Math.PI / 6)), (int)(yCenter - radius *
+          Math.sin(4 * 2 * Math.PI / 6)));
+        polygon.addPoint((int)(xCenter + radius *
+          Math.cos(5 * 2 * Math.PI / 6)), (int)(yCenter - radius *
+          Math.sin(5 * 2 * Math.PI / 6)));
         if (isFilled) {
-            g.fillPolygon(xPoints, yPoints, sides);
+            g.fillPolygon(polygon);
         } else {
-            g.drawPolygon(xPoints, yPoints, sides);
+            g.drawPolygon(polygon);
         }
     }
 }
